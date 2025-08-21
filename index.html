@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comp Off Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            padding: 12px 24px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .holiday-item, .request-item {
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .holiday-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .holiday-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-success {
+            background: #2ed573;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffa502;
+            color: white;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .notification-bell {
+            position: relative;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ffa502;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background: #e3f2fd;
+            border-left: 4px solid #667eea;
+        }
+
+        .notification-header {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .notification-email-preview {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .test-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <h2 class="login-title">Comp Off Manager</h2>
+            
+            <div class="test-info">
+                <strong>Test Credentials:</strong><br>
+                Manager: nitin / admin123<br>
+                Employee Example: mayank.dave / Welcome@123
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter password">
+            </div>
+            <button type="button" class="btn-primary" onclick="doLogin()">Login</button>
+            
+            <div id="loginError" class="alert alert-danger hidden">
+                Invalid username or password
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Dashboard -->
+    <div id="employeeDashboard" class="container hidden">
+        <div class="header">
+            <h1>Employee Portal</h1>
+            <button class="logout-btn" onclick="doLogout()">Logout</button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="empCompOffBalance">0</div>
+                <div class="stat-label">Comp Off Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="empPendingRequests">0</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h3 class="section-title">Company Holidays 2025</h3>
+                <div id="holidaysList"></div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">My Requests</h3>
+                <button class="btn btn-success" onclick="showCompOffForm()">Apply for Comp Off</button>
+                <div id="empRequestsList"></div>
+                
+                <div id="compOffForm" class="hidden" style="margin-top: 20px; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+                    <h4>Apply for Comp Off</h4>
+                    <div class="form-group">
+                        <label class="form-label">Select Date</label>
+                        <input type="date" id="compOffDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reason</label>
+                        <input type="text" id="compOffReason" class="form-input" placeholder="Enter reason">
+                    </div>
+                    <button class="btn btn-success" onclick="submitCompOff()">Submit Request</button>
+                    <button class="btn btn-danger" onclick="hideCompOffForm()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager Dashboard -->
+    <div id="managerDashboard" class="container hidden">
+        <div class="header">
+            <h1>Nitin's Dashboard</h1>
+            <div style="display: flex; align-items: center;">
+                <div style="position: relative;">
+                    <button class="notification-bell" onclick="toggleNotifications()" id="notificationBell">
+                        🔔
+                        <span class="notification-badge hidden" id="notificationBadge">0</span>
+                    </button>
+                    <div class="notification-dropdown hidden" id="notificationDropdown">
+                        <div class="notification-header">
+                            Manager Notifications
+                            <button style="float: right; background: none; border: none; cursor: pointer;" onclick="markAllRead()">Mark All Read</button>
+                        </div>
+                        <div id="notificationList">
+                            <div style="padding: 15px; text-align: center; color: #666;">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="doLogout()">Logout</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPendingRequests">0</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCompOffDays">0</div>
+                <div class="stat-label">Total Comp Off Days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">22</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h3 class="section-title">Comp Off Requests</h3>
+                <div id="managerRequestsList"></div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">Employee Balances</h3>
+                <div id="employeeBalances"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple data structure
+        let currentUser = null;
+        
+        const users = {
+            'nitin': { password: 'admin123', role: 'manager', name: 'Nitin' },
+            'nitin.darekar': { password: 'Welcome@123', role: 'employee', name: 'Nitin Darekar' },
+            'mayank.dave': { password: 'Welcome@123', role: 'employee', name: 'Mayank Dave' },
+            'krishnkant.thakur': { password: 'Welcome@123', role: 'employee', name: 'KrishnKant Thakur' },
+            'shivam.goswami': { password: 'Welcome@123', role: 'employee', name: 'Shivam Goswami' },
+            'rishabh.srivastav': { password: 'Welcome@123', role: 'employee', name: 'Rishabh Srivastav' },
+            'anand.biradar': { password: 'Welcome@123', role: 'employee', name: 'Anand Biradar' },
+            'sumit.gurav': { password: 'Welcome@123', role: 'employee', name: 'Sumit Gurav' },
+            'gopal.raul': { password: 'Welcome@123', role: 'employee', name: 'Gopal Raul' },
+            'saurabh.athawale': { password: 'Welcome@123', role: 'employee', name: 'Saurabh Athawale' },
+            'rajat.jadhav': { password: 'Welcome@123', role: 'employee', name: 'Rajat Jadhav' },
+            'ranjan.jadhav': { password: 'Welcome@123', role: 'employee', name: 'Ranjan Jadhav' },
+            'atul.mehta': { password: 'Welcome@123', role: 'employee', name: 'Atul Mehta' },
+            'varun.agarwal': { password: 'Welcome@123', role: 'employee', name: 'Varun Agarwal' },
+            'sopan.shende': { password: 'Welcome@123', role: 'employee', name: 'Sopan Shende' },
+            'aniket.karwa': { password: 'Welcome@123', role: 'employee', name: 'Aniket Karwa' },
+            'aniket.fatkar': { password: 'Welcome@123', role: 'employee', name: 'Aniket Fatkar' },
+            'sushant.mohite': { password: 'Welcome@123', role: 'employee', name: 'Sushant Mohite' },
+            'darshan.kapadni': { password: 'Welcome@123', role: 'employee', name: 'Darshan Kapadni' },
+            'durgesh.randhave': { password: 'Welcome@123', role: 'employee', name: 'Durgesh Randhave' },
+            'pranav.babhulkar': { password: 'Welcome@123', role: 'employee', name: 'Pranav Babhulkar' },
+            'jitendra.chandode': { password: 'Welcome@123', role: 'employee', name: 'Jitendra Chandode' },
+            'sanket.mavale': { password: 'Welcome@123', role: 'employee', name: 'Sanket Mavale' }
+        };
+
+        const holidays = [
+            { name: 'New Years Day', date: '2025-01-01' },
+            { name: 'Ramadan', date: '2025-03-31' },
+            { name: 'May Day', date: '2025-05-01' },
+            { name: 'Independence Day', date: '2025-08-15' },
+            { name: 'Ganesh Chaturthi', date: '2025-08-27' },
+            { name: 'Gandhi Jayanti', date: '2025-10-02' },
+            { name: 'Diwali', date: '2025-10-21' },
+            { name: 'Christmas', date: '2025-12-25' }
+        ];
+
+        let compOffRequests = [];
+        let notifications = [];
+        let employeeCompOffs = {
+            'nitin.darekar': [],
+            'mayank.dave': [],
+            'krishnkant.thakur': [],
+            'shivam.goswami': [],
+            'rishabh.srivastav': [],
+            'anand.biradar': [],
+            'sumit.gurav': [],
+            'gopal.raul': [],
+            'saurabh.athawale': [],
+            'rajat.jadhav': [],
+            'ranjan.jadhav': [],
+            'atul.mehta': [],
+            'varun.agarwal': [],
+            'sopan.shende': [],
+            'aniket.karwa': [],
+            'aniket.fatkar': [],
+            'sushant.mohite': [],
+            'darshan.kapadni': [],
+            'durgesh.randhave': [],
+            'pranav.babhulkar': [],
+            'jitendra.chandode': [],
+            'sanket.mavale': []
+        };
+
+        // Simple login function
+        function doLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            console.log('Login attempt:', username);
+            
+            if (users[username] && users[username].password === password) {
+                currentUser = { username, ...users[username] };
+                document.getElementById('loginError').classList.add('hidden');
+                
+                console.log('Login successful:', currentUser.name);
+                
+                if (currentUser.role === 'manager') {
+                    showManagerDashboard();
+                } else {
+                    showEmployeeDashboard();
+                }
+            } else {
+                console.log('Login failed');
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function showEmployeeDashboard() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('managerDashboard').classList.add('hidden');
+            document.getElementById('employeeDashboard').classList.remove('hidden');
+            loadEmployeeData();
+        }
+
+        function showManagerDashboard() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('employeeDashboard').classList.add('hidden');
+            document.getElementById('managerDashboard').classList.remove('hidden');
+            loadManagerData();
+        }
+
+        function doLogout() {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('employeeDashboard').classList.add('hidden');
+            document.getElementById('managerDashboard').classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function loadEmployeeData() {
+            const empCompOffs = employeeCompOffs[currentUser.username] || [];
+            const availableCompOffs = empCompOffs.filter(co => !co.used);
+            const pendingRequests = compOffRequests.filter(req => req.employee === currentUser.username && req.status === 'pending');
+
+            document.getElementById('empCompOffBalance').textContent = availableCompOffs.length;
+            document.getElementById('empPendingRequests').textContent = pendingRequests.length;
+
+            loadHolidays();
+            loadEmployeeRequests();
+        }
+
+        function loadHolidays() {
+            const container = document.getElementById('holidaysList');
+            container.innerHTML = '';
+
+            holidays.forEach(holiday => {
+                const hasWorked = employeeCompOffs[currentUser.username]?.some(co => co.holidayName === holiday.name);
+                const isPast = new Date(holiday.date) < new Date();
+                
+                const holidayDiv = document.createElement('div');
+                holidayDiv.className = 'holiday-item';
+                
+                holidayDiv.innerHTML = `
+                    <div class="holiday-name">${holiday.name}</div>
+                    <div class="holiday-date">${new Date(holiday.date).toLocaleDateString()}</div>
+                    ${!hasWorked && !isPast ? `<button class="btn btn-success" onclick="markPresent('${holiday.name}', '${holiday.date}')">Mark Present</button>` : ''}
+                    ${hasWorked ? '<span class="status status-approved">Comp Off Earned</span>' : ''}
+                `;
+                container.appendChild(holidayDiv);
+            });
+        }
+
+        function markPresent(holidayName, holidayDate) {
+            if (!employeeCompOffs[currentUser.username]) {
+                employeeCompOffs[currentUser.username] = [];
+            }
+            
+            const expiryDate = new Date(holidayDate);
+            expiryDate.setMonth(expiryDate.getMonth() + 2);
+            
+            employeeCompOffs[currentUser.username].push({
+                holidayName,
+                earnedDate: holidayDate,
+                expiryDate: expiryDate.toISOString().split('T')[0],
+                used: false
+            });
+            
+            alert('Comp off earned successfully! Valid until ' + expiryDate.toLocaleDateString());
+            loadEmployeeData();
+        }
+
+        function loadEmployeeRequests() {
+            const container = document.getElementById('empRequestsList');
+            const userRequests = compOffRequests.filter(req => req.employee === currentUser.username);
+            
+            container.innerHTML = '';
+            
+            userRequests.forEach(request => {
+                const requestDiv = document.createElement('div');
+                requestDiv.className = 'request-item';
+                requestDiv.innerHTML = `
+                    <div>
+                        <strong>Date: ${new Date(request.requestedDate).toLocaleDateString()}</strong><br>
+                        <small>Reason: ${request.reason}</small><br>
+                        <span class="status status-${request.status}">${request.status.toUpperCase()}</span>
+                    </div>
+                `;
+                container.appendChild(requestDiv);
+            });
+        }
+
+        function showCompOffForm() {
+            const availableCompOffs = employeeCompOffs[currentUser.username]?.filter(co => !co.used) || [];
+            
+            if (availableCompOffs.length === 0) {
+                alert('No comp off days available. Please work on a holiday first!');
+                return;
+            }
+            
+            document.getElementById('compOffForm').classList.remove('hidden');
+        }
+
+        function hideCompOffForm() {
+            document.getElementById('compOffForm').classList.add('hidden');
+            document.getElementById('compOffDate').value = '';
+            document.getElementById('compOffReason').value = '';
+        }
+
+        function submitCompOff() {
+            const requestedDate = document.getElementById('compOffDate').value;
+            const reason = document.getElementById('compOffReason').value;
+            
+            if (!requestedDate || !reason) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            const newRequest = {
+                id: compOffRequests.length + 1,
+                employee: currentUser.username,
+                employeeName: currentUser.name,
+                requestedDate,
+                reason,
+                status: 'pending',
+                appliedOn: new Date().toISOString().split('T')[0]
+            };
+            
+            compOffRequests.push(newRequest);
+            
+            // Create notification for manager
+            const notification = {
+                id: notifications.length + 1,
+                type: 'comp_off_request',
+                employee: currentUser.name,
+                message: `${currentUser.name} has applied for comp off on ${new Date(requestedDate).toLocaleDateString()}. Reason: ${reason}`,
+                timestamp: new Date().toISOString(),
+                read: false,
+                requestId: newRequest.id
+            };
+            notifications.push(notification);
+            
+            console.log('New notification created:', notification);
+            console.log('Total notifications:', notifications.length);
+            
+            // Show email preview to employee
+            showEmployeeEmailPreview(newRequest);
+            
+            hideCompOffForm();
+            loadEmployeeData();
+        }
+
+        function showEmployeeEmailPreview(request) {
+            const emailContent = `
+EMAIL PREVIEW - Manager Notification:
+
+To: nitin@company.com
+Subject: New Comp Off Request - ${request.employeeName}
+
+Dear Nitin,
+
+${request.employeeName} has submitted a new comp off request:
+
+Employee: ${request.employeeName}
+Requested Date: ${new Date(request.requestedDate).toLocaleDateString()}
+Reason: ${request.reason}
+Applied On: ${new Date(request.appliedOn).toLocaleDateString()}
+
+Please log in to the Comp Off Management Portal to approve or reject this request.
+
+Best regards,
+Comp Off Management System`;
+
+            alert(emailContent);
+        }
+
+        function loadManagerData() {
+            const pendingRequests = compOffRequests.filter(req => req.status === 'pending');
+            const totalCompOffs = Object.values(employeeCompOffs).flat().filter(co => !co.used);
+
+            document.getElementById('totalPendingRequests').textContent = pendingRequests.length;
+            document.getElementById('totalCompOffDays').textContent = totalCompOffs.length;
+
+            loadManagerRequests();
+            loadEmployeeBalances();
+            updateNotificationBell();
+        }
+
+        function updateNotificationBell() {
+            const unreadNotifications = notifications.filter(n => !n.read);
+            const badge = document.getElementById('notificationBadge');
+            
+            console.log('Updating bell. Unread notifications:', unreadNotifications.length);
+            console.log('All notifications:', notifications);
+            
+            if (unreadNotifications.length > 0) {
+                badge.textContent = unreadNotifications.length;
+                badge.classList.remove('hidden');
+                console.log('Badge should be visible with:', unreadNotifications.length);
+            } else {
+                badge.classList.add('hidden');
+                console.log('Badge hidden');
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('hidden');
+            
+            if (!dropdown.classList.contains('hidden')) {
+                loadNotifications();
+            }
+        }
+
+        function loadNotifications() {
+            const container = document.getElementById('notificationList');
+            
+            console.log('Loading notifications. Total:', notifications.length);
+            
+            if (notifications.length === 0) {
+                container.innerHTML = '<div style="padding: 15px; text-align: center; color: #666;">No notifications yet</div>';
+                return;
+            }
+
+            // Sort notifications by timestamp (newest first)
+            const sortedNotifications = notifications.slice().reverse();
+            
+            container.innerHTML = '';
+            
+            sortedNotifications.forEach(notification => {
+                console.log('Displaying notification:', notification);
+                
+                const notificationDiv = document.createElement('div');
+                notificationDiv.className = `notification-item ${!notification.read ? 'unread' : ''}`;
+                
+                notificationDiv.innerHTML = `
+                    <div style="font-weight: ${!notification.read ? 'bold' : 'normal'};">
+                        📋 ${notification.message}
+                    </div>
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        ${new Date(notification.timestamp).toLocaleString()}
+                    </small>
+                `;
+                
+                notificationDiv.onclick = () => {
+                    notification.read = true;
+                    updateNotificationBell();
+                    loadNotifications();
+                    
+                    // If it's a comp off request notification, highlight the request
+                    if (notification.requestId) {
+                        alert(`Taking you to the comp off request from ${notification.employee}`);
+                        toggleNotifications(); // Close dropdown
+                    }
+                };
+                
+                container.appendChild(notificationDiv);
+            });
+        }
+
+        function markAllRead() {
+            notifications.forEach(n => n.read = true);
+            updateNotificationBell();
+            loadNotifications();
+        }
+
+        function loadManagerRequests() {
+            const container = document.getElementById('managerRequestsList');
+            container.innerHTML = '';
+            
+            if (compOffRequests.length === 0) {
+                container.innerHTML = '<p>No requests yet.</p>';
+                return;
+            }
+
+            compOffRequests.forEach(request => {
+                const requestDiv = document.createElement('div');
+                requestDiv.className = 'request-item';
+                requestDiv.innerHTML = `
+                    <div>
+                        <strong>${request.employeeName}</strong><br>
+                        <small>Date: ${new Date(request.requestedDate).toLocaleDateString()}</small><br>
+                        <small>Reason: ${request.reason}</small><br>
+                        ${request.status === 'pending' ? `
+                            <button class="btn btn-success" onclick="approveRequest(${request.id})">Approve</button>
+                            <button class="btn btn-danger" onclick="rejectRequest(${request.id})">Reject</button>
+                        ` : `<span class="status status-${request.status}">${request.status.toUpperCase()}</span>`}
+                    </div>
+                `;
+                container.appendChild(requestDiv);
+            });
+        }
+
+        function loadEmployeeBalances() {
+            const container = document.getElementById('employeeBalances');
+            container.innerHTML = '';
+
+            Object.keys(users).filter(username => users[username].role === 'employee').forEach(username => {
+                const empCompOffs = employeeCompOffs[username] || [];
+                const availableCompOffs = empCompOffs.filter(co => !co.used);
+
+                const balanceDiv = document.createElement('div');
+                balanceDiv.className = 'holiday-item';
+                balanceDiv.innerHTML = `
+                    <div>
+                        <strong>${users[username].name}</strong><br>
+                        <small>Available: ${availableCompOffs.length} days</small>
+                    </div>
+                `;
+                container.appendChild(balanceDiv);
+            });
+        }
+
+        function approveRequest(requestId) {
+            const request = compOffRequests.find(req => req.id === requestId);
+            if (request) {
+                request.status = 'approved';
+                
+                // Mark comp off as used
+                const empCompOffs = employeeCompOffs[request.employee];
+                if (empCompOffs && empCompOffs.length > 0) {
+                    const availableCompOff = empCompOffs.find(co => !co.used);
+                    if (availableCompOff) {
+                        availableCompOff.used = true;
+                        availableCompOff.usedDate = request.requestedDate;
+                    }
+                }
+                
+                // Show approval email preview
+                showApprovalEmailPreview('approved', request);
+                loadManagerData();
+            }
+        }
+
+        function rejectRequest(requestId) {
+            const request = compOffRequests.find(req => req.id === requestId);
+            if (request) {
+                request.status = 'rejected';
+                showApprovalEmailPreview('rejected', request);
+                loadManagerData();
+            }
+        }
+
+        function showApprovalEmailPreview(status, request) {
+            const subject = status === 'approved' ? 'Comp Off Request Approved' : 'Comp Off Request Rejected';
+            const message = status === 'approved' ? 
+                `Your comp off request for ${new Date(request.requestedDate).toLocaleDateString()} has been approved by Nitin.` :
+                `Your comp off request for ${new Date(request.requestedDate).toLocaleDateString()} has been rejected by Nitin.`;
+                
+            const emailContent = `
+EMAIL PREVIEW - Employee Notification:
+
+To: ${request.employee}@company.com
+Subject: ${subject}
+
+Dear ${request.employeeName},
+
+${message}
+
+Request Details:
+- Requested Date: ${new Date(request.requestedDate).toLocaleDateString()}
+- Reason: ${request.reason}
+- Status: ${status.toUpperCase()}
+- Decision Date: ${new Date().toLocaleDateString()}
+
+${status === 'approved' ? 'Enjoy your comp off day!' : 'Please feel free to discuss with your manager if you have any questions.'}
+
+Best regards,
+Nitin
+Manager`;
+
+            alert(emailContent);
+        }
+
+        // Allow Enter key to login and close notifications when clicking outside
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) {
+                doLogin();
+            }
+        });
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bell = document.getElementById('notificationBell');
+            
+            if (!dropdown?.contains(e.target) && !bell?.contains(e.target)) {
+                dropdown?.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
